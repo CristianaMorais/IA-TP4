@@ -1,5 +1,7 @@
 from math import log2
 from sys import maxsize
+from copy import deepcopy
+
 class DecisionTree:
     def __init__(self, exemplos, atributos, classe):
         """
@@ -22,7 +24,8 @@ class DecisionTree:
         ''' Guardar atrinutos e o seu inverso'''
         self.atributosG_Str_Int = atributos
         self.atributosG_Int_Str = {v: k for k, v in atributos.items()}
-        self.__madeTree(exemplos, atributos)
+        self.__madeTree(exemplos, deepcopy(atributos))
+        print("Estou")
 
 
     def classify(self):
@@ -48,7 +51,7 @@ class DecisionTree:
             classeRep = [[0 for _ in range(len(self.possibleObjectives))] for _ in range(len(diferAtr))]
             for i in range(len(diferAtrExamp)):
                 for ex in diferAtrExamp[i]:
-                    classeRep[i][self.possibleObjectives.index(exemplos[i][-1])] += 1
+                    classeRep[i][self.possibleObjectives.index(exemplos[ex][-1])] += 1
             return diferAtr, diferAtrExamp, classeRep
 
         del diferAtr
@@ -91,15 +94,15 @@ class DecisionTree:
             :return: str
         """
 
-        entropias = [None for _ in range(len(atributos) - 1)]  # é removido dois pq uma para atributo classe e outro ID
+        entropias = [None for _ in range(len(self.atributosG_Str_Int) - 1)]  # é removido dois pq uma para atributo classe e outro ID
 
         for key, val in atributos.items():
             if key is not self.classe and key != 'ID':
                 entropias[val] = self.entropy(exemplos, val)
 
         entropias[0] = maxsize
-        print(list(zip(atributos.keys(), entropias)))
-
+        #print(list(zip(atributos.keys(), entropias)))
+        entropias = [x if x is not None else maxsize for x in entropias]
         decision = entropias.index(min(entropias))
         return self.atributosG_Int_Str[decision]
 
@@ -117,7 +120,7 @@ class DecisionTree:
         node = Node_root(target_atribute)
 
         incomplete = [] # lista de conjunto de dados aos quais não chegamos a nenhuma conclusão
-        for i in range(atrNames):
+        for i in range(len(atrNames)):
             flag = True
             for x in finalAns[i]:
                 if x != 0:
@@ -136,9 +139,15 @@ class DecisionTree:
             '''Caso ainda faltem atributos a ser processados'''
             for i in incomplete:
                 aux_exam = [examples[x] for x in range(len(examples)) if x in atrExam[i]]
-                decision = self.makeDecision(examples, atributes)
-                no_aux = self.__ID3(aux_exam,decision,atributes)
-                node.append(Jump(atrNames[i],no_aux,len(atrExam[i])))
+                '''Caso fosse dar origem a atrinuto sem exemplos'''
+                if aux_exam:
+                    decision = self.makeDecision(examples, atributes)
+                    no_aux = self.__ID3(aux_exam,decision,atributes)
+                    node.append(Jump(atrNames[i],no_aux,len(atrExam[i])))
+                else:
+                    print('Não sei que fazer')
+                    pass
+
         else:
             for i in incomplete:
                 answer = atrNames[i]
@@ -147,7 +156,6 @@ class DecisionTree:
                 node.append(Leaf(answer, label, count))
 
         return node
-
 
 class Ramo:
      pass
@@ -185,6 +193,10 @@ class Jump(Ramo):
         self.jump = jump
         self.counter = counter
 
+    def __str__(self):
+        return '\t'
+
+
 
 class Node_root:
     """
@@ -197,3 +209,10 @@ class Node_root:
 
     def append(self,item):
         self.answers.append(item)
+
+    def __str__(self):
+        frase = '<'+self.atributo+'>\n'
+        for x in self.answers:
+            frase += str(x)
+
+        return frase
