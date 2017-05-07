@@ -25,10 +25,15 @@ class DecisionTree:
         self.atributosG_Str_Int = atributos
         self.atributosG_Int_Str = {v: k for k, v in atributos.items()}
         self.__madeTree(exemplos, deepcopy(atributos))
-        print("Estou")
+        print(self.root.myStr())
 
 
-    def classify(self):
+    def classify(self, dict):
+        '''
+        :param dict: dicionário que pretendemos aporar a verdade
+        :type dict: dict(str,str)
+        :return: str
+        '''
         pass
 
     def entropy(self, exemplos, atributo, flag=False):
@@ -181,6 +186,12 @@ class Leaf(Ramo):
         self.label = label
         self.counter = counter
 
+    def __str__(self):
+        return str(self.answer)+': '+str(self.label)+' ('+str(self.counter)+')\n'
+
+    def myStr(self, prof):
+        return '\t'*prof + str(self.answer) + ': ' + str(self.label) + ' (' + str(self.counter) + ')\n'
+
 
 class Jump(Ramo):
     """
@@ -194,7 +205,10 @@ class Jump(Ramo):
         self.counter = counter
 
     def __str__(self):
-        return '\t'
+        return str(self.answer)+':\n'+str(self.jump)
+
+    def myStr(self,prof):
+        return '\t'*prof+ str(self.answer)+':\n'+self.jump.myStr(prof+1)
 
 
 
@@ -214,5 +228,12 @@ class Node_root:
         frase = '<'+self.atributo+'>\n'
         for x in self.answers:
             frase += str(x)
+
+        return frase
+
+    def myStr(self, prof=0):
+        frase = '\t'*prof +'<'+self.atributo+'>\n'
+        for x in self.answers:
+            frase += x.myStr(prof+1)
 
         return frase
