@@ -42,7 +42,7 @@ class DecisionTree:
                 diferAtrExamp[aux].append(i)
             except ValueError:
                 diferAtr.append(exemplos[i][atributo])
-                diferAtrExamp.append([1])
+                diferAtrExamp.append([i])
 
         if flag:
             classeRep = [[0 for _ in range(len(self.possibleObjectives))] for _ in range(len(diferAtr))]
