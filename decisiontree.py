@@ -34,7 +34,7 @@ class DecisionTree:
         :type dict: dict(str,str)
         :return: str
         '''
-        pass
+        self.root.classify(dict)
 
     def entropy(self, exemplos, atributo, flag=False):
         """
@@ -192,6 +192,9 @@ class Leaf(Ramo):
     def myStr(self, prof):
         return '\t'*prof + str(self.answer) + ': ' + str(self.label) + ' (' + str(self.counter) + ')\n'
 
+    def classify(self, dict):
+        return self.label
+
 
 class Jump(Ramo):
     """
@@ -209,6 +212,9 @@ class Jump(Ramo):
 
     def myStr(self,prof):
         return '\t'*prof+ str(self.answer)+':\n'+self.jump.myStr(prof+1)
+
+    def classify(self, dict):
+        return self.jump.classify(dict)
 
 
 
@@ -237,3 +243,9 @@ class Node_root:
             frase += x.myStr(prof+1)
 
         return frase
+
+    def classify(self,dict):
+        user_answer = dict[self.atributo]
+        for x in self.answers:
+            if x.answer == user_answer:
+                return x.classify(dict)
