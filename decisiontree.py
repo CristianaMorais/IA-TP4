@@ -34,7 +34,7 @@ class DecisionTree:
         :type dict: dict(str,str)
         :return: str
         '''
-        self.root.classify(dict)
+        return self.root.classify(dict)
 
     def entropy(self, exemplos, atributo, flag=False):
         """
@@ -146,12 +146,12 @@ class DecisionTree:
                 aux_exam = [examples[x] for x in range(len(examples)) if x in atrExam[i]]
                 '''Caso fosse dar origem a atrinuto sem exemplos'''
                 if aux_exam:
-                    decision = self.makeDecision(examples, atributes)
+                    decision = self.makeDecision(aux_exam, atributes)
                     no_aux = self.__ID3(aux_exam,decision,atributes)
                     node.append(Jump(atrNames[i],no_aux,len(atrExam[i])))
                 else:
                     print('Não sei que fazer')
-                    pass
+
 
         else:
             for i in incomplete:
