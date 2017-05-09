@@ -3,6 +3,9 @@ from sys import maxsize
 from copy import deepcopy
 
 class DecisionTree:
+
+    minimoElem = 3
+
     def __init__(self, exemplos, atributos, classe):
         """
         :param exemplos: Exemplos do problema
@@ -13,6 +16,7 @@ class DecisionTree:
         :type classe: str
         """
         self.classe = classe
+        self.transformations = {}
         self.possibleObjectives = []
         for i in range(len(exemplos)):
             try:
@@ -20,12 +24,19 @@ class DecisionTree:
             except ValueError:
                 self.possibleObjectives.append(exemplos[i][-1])
 
-        self.examples = deepcopy(exemplos)
-
-        self.root = None
         ''' Guardar atrinutos e o seu inverso'''
         self.atributosG_Str_Int = atributos
         self.atributosG_Int_Str = {v: k for k, v in atributos.items()}
+
+        '''Preparar examples'''
+        for i in range(1,len(atributos)):
+            if exemplos[0][i].isdigit():
+                self.transform(exemplos,i,atributos)
+
+        self.examples = deepcopy(exemplos)
+
+        self.root = None
+
         self.__madeTree(exemplos, deepcopy(atributos))
 
 
@@ -162,7 +173,7 @@ class DecisionTree:
                     node.append(Jump(atrNames[i],no_aux,len(atrExam[i])))
                 else:
                     '''caso não exista exemplos'''
-                    node.append(Leaf(atrNames[i],self.mostCommon(examples),0))
+                    node.append(Leaf(atrNames[i],self.mostCommon(),0))
 
 
         else:
@@ -174,12 +185,49 @@ class DecisionTree:
 
         return node
 
-    def mostCommon(self, examples):
+    '''Trocar número para o geral'''
+    def mostCommon(self):
+        examples = self.examples
         classeRep = [0 for _ in range(len(self.possibleObjectives))]
         for aux in examples:
             classeRep[self.possibleObjectives.index(aux[-1])] += 1
 
         return self.possibleObjectives[classeRep.index(max(classeRep))]
+
+    '''Efetua a transfromação dos exemplos'''
+    def transform(self, exemplos, index):
+        """
+        :type exemplos: list(list(str))
+        :type index: int
+        :type atributos: dict(str,int) 
+        """
+        lista = [(float(exemplos[u][index]),exemplos[u][-1]) for u in range(len(exemplos))]
+
+        lista = lista.sort()
+
+        aux = []
+
+        encher_chouriços = False
+        i=0
+        for num, target in lista:
+            if i >= self.minimoElem:
+                if aval != target or encher_chouriços:
+                    if aux:
+                        aux.append(Intervalo(first,num))
+
+                    first = num
+                    aval = target
+                    encher_chouriços = False
+                    i=0
+
+            elif aval != target:
+                encher_chouriços = True
+            i += 1
+
+        for u in range(len(exemplos)):
+            exemplos[u][index] = str(aux[aux.index(exemplos[u][index])])
+
+        self.transformations[self.atributosG_Int_Str[i]] = aux
 
     def __str__(self):
         return self.root.myStr()
@@ -271,3 +319,21 @@ class Node_root:
         for x in self.answers:
             if x.answer == user_answer:
                 return x.classify(dict)
+
+class Intervalo:
+    def __init__(self,minimo, maximo):
+        """
+        :param minimo: minimo do intervalo (inclusivo)
+        :param maximo: máximo do intervalo (exclusivo)
+        """
+        self.minimo = minimo
+        self.maximo = maximo
+
+    def __eq__(self, other):
+        if self.minimo <= other < self.maximo:
+            return True
+        else:
+            return False
+
+    def __str__(self):
+        return str(self.minimo)+' <= x < '+str(self.maximo)

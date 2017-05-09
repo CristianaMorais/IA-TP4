@@ -56,13 +56,7 @@ def main():
 
             del dicio
 
-
         fd.close()
-
-
-
-
-
 
 
 if __name__ == '__main__':
