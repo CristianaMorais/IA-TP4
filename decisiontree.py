@@ -20,12 +20,13 @@ class DecisionTree:
             except ValueError:
                 self.possibleObjectives.append(exemplos[i][-1])
 
+        self.examples = deepcopy(exemplos)
+
         self.root = None
         ''' Guardar atrinutos e o seu inverso'''
         self.atributosG_Str_Int = atributos
         self.atributosG_Int_Str = {v: k for k, v in atributos.items()}
         self.__madeTree(exemplos, deepcopy(atributos))
-        print(self.root.myStr())
 
 
     def classify(self, dict):
@@ -53,6 +54,13 @@ class DecisionTree:
                 diferAtrExamp.append([i])
 
         if flag:
+            for i in range(len(self.examples)):
+                try:
+                    diferAtr.index(self.examples[i][atributo])
+                except ValueError:
+                    diferAtr.append(self.examples[i][atributo])
+                    diferAtrExamp.append([])
+
             classeRep = [[0 for _ in range(len(self.possibleObjectives))] for _ in range(len(diferAtr))]
             for i in range(len(diferAtrExamp)):
                 for ex in diferAtrExamp[i]:
@@ -127,6 +135,9 @@ class DecisionTree:
         incomplete = [] # lista de conjunto de dados aos quais não chegamos a nenhuma conclusão
         for i in range(len(atrNames)):
             flag = True
+            if atrExam[i] == []:
+                incomplete.append(i)
+                continue
             for x in finalAns[i]:
                 if x != 0:
                     if flag:
@@ -150,7 +161,8 @@ class DecisionTree:
                     no_aux = self.__ID3(aux_exam,decision,atributes)
                     node.append(Jump(atrNames[i],no_aux,len(atrExam[i])))
                 else:
-                    print('Não sei que fazer')
+                    '''caso não exista exemplos'''
+                    node.append(Leaf(atrNames[i],self.mostCommon(examples),0))
 
 
         else:
@@ -161,6 +173,16 @@ class DecisionTree:
                 node.append(Leaf(answer, label, count))
 
         return node
+
+    def mostCommon(self, examples):
+        classeRep = [0 for _ in range(len(self.possibleObjectives))]
+        for aux in examples:
+            classeRep[self.possibleObjectives.index(aux[-1])] += 1
+
+        return self.possibleObjectives[classeRep.index(max(classeRep))]
+
+    def __str__(self):
+        return self.root.myStr()
 
 class Ramo:
      pass
