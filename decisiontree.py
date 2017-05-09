@@ -30,9 +30,11 @@ class DecisionTree:
 
         '''Preparar examples'''
         for i in range(1,len(atributos)):
-            if exemplos[0][i].isdigit():
-                self.transform(exemplos,i,atributos)
-
+            try:
+                float(exemplos[0][i])
+                self.transform(exemplos,i)
+            except ValueError:
+                pass
         self.examples = deepcopy(exemplos)
 
         self.root = None
@@ -46,6 +48,9 @@ class DecisionTree:
         :type dict: dict(str,str)
         :return: str
         '''
+        for key, val in self.transformations.items():
+            dict[key] = str(val[val.index(dict[key])])
+
         return self.root.classify(dict)
 
     def entropy(self, exemplos, atributo, flag=False):
@@ -162,14 +167,14 @@ class DecisionTree:
             if not flag:
                 node.append(Leaf(atrNames[i], classe, len(atrExam[i])))
 
-        if atributes:
+        if len(atributes)>2:
             '''Caso ainda faltem atributos a ser processados'''
             for i in incomplete:
                 aux_exam = [examples[x] for x in range(len(examples)) if x in atrExam[i]]
                 '''Caso fosse dar origem a atrinuto sem exemplos'''
                 if aux_exam:
                     decision = self.makeDecision(aux_exam, atributes)
-                    no_aux = self.__ID3(aux_exam,decision,atributes)
+                    no_aux = self.__ID3(aux_exam,decision,deepcopy(atributes))
                     node.append(Jump(atrNames[i],no_aux,len(atrExam[i])))
                 else:
                     '''caso não exista exemplos'''
@@ -203,18 +208,19 @@ class DecisionTree:
         """
         lista = [(float(exemplos[u][index]),exemplos[u][-1]) for u in range(len(exemplos))]
 
-        lista = lista.sort()
+        lista.sort()
 
         aux = []
 
         encher_chouriços = False
         i=0
         for num, target in lista:
-            if i >= self.minimoElem:
+            if i == 0:
+                aval = target
+                first = num
+            elif i >= self.minimoElem:
                 if aval != target or encher_chouriços:
-                    if aux:
-                        aux.append(Intervalo(first,num))
-
+                    aux.append(Intervalo(first,num))
                     first = num
                     aval = target
                     encher_chouriços = False
@@ -223,11 +229,12 @@ class DecisionTree:
             elif aval != target:
                 encher_chouriços = True
             i += 1
+        aux.append(Intervalo(first, num+0.1))
 
         for u in range(len(exemplos)):
-            exemplos[u][index] = str(aux[aux.index(exemplos[u][index])])
+            exemplos[u][index] = str(aux[aux.index(float(exemplos[u][index]))])
 
-        self.transformations[self.atributosG_Int_Str[i]] = aux
+        self.transformations[self.atributosG_Int_Str[index]] = aux
 
     def __str__(self):
         return self.root.myStr()

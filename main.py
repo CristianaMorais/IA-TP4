@@ -14,7 +14,7 @@ def main():
 
     args = parser.parse_args()
 
-    args.examples = 'restaurant.csv'
+    args.examples = 'iris.csv'
 
     '''Leitura do ficheiro CSV dos exemplos'''
     with open(args.examples,'rt') as fd:
@@ -37,10 +37,9 @@ def main():
 
     arvore = DecisionTree(exemplos, atributos, classe)
 
-    if print:
+    if args.print:
         print(arvore)
 
-    exit(0)
     '''Leitura do csv dos testes'''
     with open(args.testes, 'rt') as fd:
         exemplosBuf = csv.reader(fd)
