@@ -3,9 +3,8 @@ from decisiontree import DecisionTree
 from argparse import ArgumentParser
 from sys import exit
 
+
 def main():
-
-
     parser = ArgumentParser(description='Porcessador de dados utilizando ID3.')
 
     parser.add_argument('-e','--examples', type=str, help='Documento com os dados que queremeos que a máquina aprenda.')
@@ -40,22 +39,23 @@ def main():
     if args.print:
         print(arvore)
 
-    '''Leitura do csv dos testes'''
-    with open(args.testes, 'rt') as fd:
-        exemplosBuf = csv.reader(fd)
-        firstRow = exemplosBuf.__next__()
+    if args.testes is not None:
+        '''Leitura do csv dos testes'''
+        with open(args.testes, 'rt') as fd:
+            exemplosBuf = csv.reader(fd)
+            firstRow = exemplosBuf.__next__()
 
-        for aux in exemplosBuf:
-            dicio = {}  # type: dict(str,str)
-            for i in range(len(firstRow)):
-                dicio[firstRow[i]] = aux[i]
+            for aux in exemplosBuf:
+                dicio = {}  # type: dict(str,str)
+                for i in range(len(firstRow)):
+                    dicio[firstRow[i]] = aux[i]
 
-            '''Procurar resposta'''
-            print(arvore.classify(dicio))
+                '''Procurar resposta'''
+                print(arvore.classify(dicio))
 
-            del dicio
+                del dicio
 
-        fd.close()
+            fd.close()
 
 
 if __name__ == '__main__':
