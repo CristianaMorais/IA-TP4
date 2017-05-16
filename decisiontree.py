@@ -4,7 +4,7 @@ from copy import deepcopy
 
 class DecisionTree:
 
-    minimoElem = 3
+    minimoElem = 4
 
     def __init__(self, exemplos, atributos, classe):
         """
