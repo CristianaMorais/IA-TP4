@@ -41,6 +41,7 @@ class DecisionTree:
 
         self.__madeTree(exemplos, deepcopy(atributos))
 
+        self.root.rearange()
 
     def classify(self, dict):
         '''
@@ -232,7 +233,7 @@ class DecisionTree:
         aux.append(Intervalo(first, num+0.1))
 
         for u in range(len(exemplos)):
-            exemplos[u][index] = str(aux[aux.index(float(exemplos[u][index]))])
+            exemplos[u][index] = aux[aux.index(float(exemplos[u][index]))]
 
         self.transformations[self.atributosG_Int_Str[index]] = aux
 
@@ -272,6 +273,9 @@ class Leaf(Ramo):
     def classify(self, dict):
         return self.label
 
+    def rearange(self):
+        pass
+
 
 class Jump(Ramo):
     """
@@ -293,7 +297,8 @@ class Jump(Ramo):
     def classify(self, dict):
         return self.jump.classify(dict)
 
-
+    def rearange(self):
+        self.jump.rearange()
 
 class Node_root:
     """
@@ -327,6 +332,20 @@ class Node_root:
             if x.answer == user_answer:
                 return x.classify(dict)
 
+    def rearange(self):
+        if type(self.answers[0].answer)==Intervalo:
+            answerAux = []
+
+            ve = [(self.answers[i].answer, self.answers[i].) for i in range(len(self.answers))] # type ve: list(Intervalo)
+            ve.sort()
+
+            for
+
+
+
+        for x in self.answers:
+            x.rearange()
+
 class Intervalo:
     def __init__(self,minimo, maximo):
         """
@@ -337,10 +356,20 @@ class Intervalo:
         self.maximo = maximo
 
     def __eq__(self, other):
+        if type(self) == type(other):
+            if self.minimo == other.minimo and self.maximo == other.maximo:
+                return True
+            else:
+                return False
+
         if self.minimo <= other < self.maximo:
             return True
         else:
             return False
+
+    def __lt__(self, other):
+        if type(self) == type(other):
+            return self.maximo<=other.minimo
 
     def __str__(self):
         return str(self.minimo)+' <= x < '+str(self.maximo)

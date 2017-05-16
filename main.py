@@ -13,7 +13,7 @@ def main():
 
     args = parser.parse_args()
 
-    #args.examples = 'iris.csv'
+    args.examples = 'weather.csv'
 
     '''Leitura do ficheiro CSV dos exemplos'''
     with open(args.examples,'rt') as fd:
