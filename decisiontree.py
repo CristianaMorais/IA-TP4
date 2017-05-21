@@ -256,14 +256,13 @@ class Leaf(Ramo):
     """
 
     def __init__(self, answer, label, counter):
-        '''
+        """
         :param answer: Opção de resposta ao nó pai
-        :type answer: str
         :param label: Classe respondida
         :type label: str
         :param counter: Numero de exemplos identificados
         :type counter: int
-        '''
+        """
         self.answer = answer
         self.label = label
         self.counter = counter

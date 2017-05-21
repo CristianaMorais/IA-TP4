@@ -22,6 +22,7 @@
 \end{titlepage}
 
 \tableofcontents
+
 \section{Introdução}
 Uma árvore de decisão é a representação de uma função que efetua a avaliação a um determinado conjunto de dados e que consegue retornar uma decisão \cite{stuart2016artificial}, com base em conhecimento que foi previamente dado à máquina. Este tipo de representação de dados é aquele que permite uma mais simples e maior taxa de sucesso quando utilizados em conjunção com algoritmos de indução em árvores de decisão.
 Numa árvore de decisão cada nó representa um teste ao conjunto de dados que se pretende avaliar e cada um dos seus ramos encontra-se identificado com os possíveis valores que pode tomar. Estes testes e os seus ramos vão conduzindo o algoritmo até a um nó folha aonde se encontra o valor a ser retornado pela função, que será a sua decisão.
@@ -37,29 +38,50 @@ Como o referido anteriormente este algoritmos são de sua essência greedy logo 
 A impuridade Gini
 
 \subsection{ID3}
-
+O algoritmo ID3 (inductive decision tree) é um dos mais utilizados para a construção de árvores de decisão. Este algoritmo tem como objetivo a construção de uma árvore de decisão que explique cada instância de um sequencia de entrada, da maneira mais compacta. Em cada momento elege o melhor atributo dependendo de uma determinada heurística.  
+O ID3 segue os seguintes passos:
+\begin{enumerate}
+	\item 	Começar com todos os exemplos de treino;
+	\item	Escolher o teste (atributo) que melhor divide os exemplos, ou seja agrupar exemplos da mesma classe ou exemplos semelhantes;
+	\item	Para o atributo escolhido, criar um nó filho para cada valor possível do atributo;
+	\item	Transportar os exemplos para cada filho tendo em conta o valor do filho;
+	\item	Repetir o procedimento para cada filho não "puro". Um filho é puro quando cada atributo X tem o mesmo valor em todos os exemplos. 
+\end{enumerate}
+Mesmo assim deixamos a pensar como é que vamos escolher o nosso melhor atributo?  A resposta esta em dois conceitos: Entropia e Ganho
 \subsection{CART}
 
-\subsection{C4.5}
 
-\section{Implementsção}
-Neste trabalho utilizamos Python 3, devido a ser uma linguagem multi-paradigma e levando assim a uma passagem mais rápida da parte do planeamento para implentação.
+\subsection{C4.5}
+O algoritmo C4.5 é um melhoramento do algoritmo ID3, isto devido ao fato de trabalhar com valores indisponíveis, com valores contínuos, podar árvores de decisão e derivar regras.
+Trabalhar com atributos que possuem valores indisponíveis na construção de uma árvore da decisão, pode ser considerado um problema. A falta destes valores, pode ocorrer pelo fato de não terem sido registados no momento da recolha dos dados, ou por não serem considerados relevantes para um determinado caso.
+Por outras palavra, este algoritmo ignora os valores desconhecidos, ou seja, não utiliza a amostra para os cálculos de entropia e ganho.
+Utiliza a medida de razão de ganho para selecionar o melhor atributo que divide os exemplos. Medida superior ao ganho de informação do ID3, gerando árvores menos complexas.
+
+\section{Implementação}
+Neste trabalho utilizamos Python 3, devido a ser uma linguagem multi-paradigma e levando assim a uma passagem mais rápida da parte do planeamento para implementação.
+A forma como era necessário responder ao problema obrigava-nos a que por um lado conseguíssemos representar e construir de forma organizada uma árvore de decisão capaz não só de armazenar dados brutos mas por exemplo no caso de dados numéricos conseguir agrupá-los de forma a que a árvore se torne mais legível, sem comprometer a fiabilidade da árvore de decisão.  
 \subsection{Estrutura de dados}
 
-\subsubsection{Dicionários}
+\subsubsection{Dicionários e listas}
 
-\subsubsection{Listas}
 
 \subsubsection{Leaf}
+Estrutura com o objetivo de representar os nós folhas na árvore de decisão. Aqui estará armazenado a resposta ao nó pai, a classe e o contador de casos que se encontram identificados com esta folha.
 
 \subsubsection{Jump}
+Estrutura de ser o elo de ligação entre dois nós da árvore  de decisão, a estrutura Jump é composta por um campo answer com a resposta ao nó pai , um contador com o numero de nós que se identificaram com aquele caso e um apontador para outro nó da árvore.
 
-\subsubsection{Node_root}
+\subsubsection{Node\_root}
+Estrutura que representa cada nó da árvore as suas componentes principais é o atributo e uma lista com todos os deus ramos.
+
+
+\subsection{Intervalo}
+A estrutura intervalo, é aquela que nos permite que consigamos representar intervalos numéricos na árvore de decisão. Da forma como ela foi implementada permite a ordenação de intervalos de forma automática e quando a estrutura intervalo é comprada com um valor numérico se esse se encontrar nos seus limites identifica-o como seu.
 
 \subsection{Organização do código}
 
 \subsection{Reflexão}
-Durante a fase de implemen
+Durante a fase de já testes do programa chegamos à conclusão que não era necessário ter utilizado a estrutura jump e a estrutura leaf de forma tão complicada já que nos tinha bastado implementar um dicionário onde a \textit{answer} seria a key de pesquisa no dicionário.
 
 \bibliographystyle{plain}
 \bibliography{bibliografia} 
