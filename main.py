@@ -1,7 +1,7 @@
 import csv
 from decisiontree import DecisionTree
 from argparse import ArgumentParser
-from sys import exit
+from sys import argv, exit
 
 
 def main():
@@ -13,8 +13,12 @@ def main():
 
     args = parser.parse_args()
 
+    if len(argv) == 1:
+        parser.print_help()
+        exit(0)
+
     '''Leitura do ficheiro CSV dos exemplos'''
-    with open(args.examples,'rt') as fd:
+    with open(args.examples ,'rt') as fd:
 
         exemplosBuf= csv.reader(fd)
         firstRow = exemplosBuf.__next__()
