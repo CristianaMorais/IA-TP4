@@ -34,10 +34,17 @@ As árvores de decisão são apenas uma estrutura de dados, logo sem algoritmos 
 Os algoritmos de indução de árvores de decisão são algoritmos que dados o conjunto de dados de exemplo consegue representar de forma genérica as relações existentes entre dados de input e os resultados.Que caso especifico usando essas relações constroem de forma automática a árvore de decisão.\cite{rokach2005top} Estes algoritmos por norma têm uma construção aplicando princípios \textit{greedy} e construido a árvore na direção raiz para as folhas de forma recursiva.
 Como o referido anteriormente este algoritmos são de sua essência greedy logo para que em cada nó ele possa efetuar a melhor escolha vai utilizar métricas.
 \subsection{Métricas}
-\subsubsection{Ganho}
+\subsubsection{Ganho de informação}
+O ganho de informação é baseado no conceito de entropia.
+A entropia é a media de incerteza que há num sistema. Usando o conceito de entropia podemos calcular a probabilidade de ocorrência de um determinado evento em cada conjunto de resultados.
+Dado um conjunto S, com instâncias pertencentes à classe i, com probabilidade  $\phi$, temos:
+
+\begin{equation}
+	Entropia = \sum_{i=0}^{i} \phi\log\phi
+\end{equation}
 
 \subsubsection{Impuridade de Gini}
-A impuridade Gini
+A impuridade Gini é uma métrica que mede a divergência entre a distribuição probabilística  dos valores que atributo toma.  
 
 \subsection{ID3}
 O algoritmo ID3 (inductive decision tree) é um dos mais utilizados para a construção de árvores de decisão. Este algoritmo tem como objetivo a construção de uma árvore de decisão que explique cada instância de um sequencia de entrada, da maneira mais compacta. Em cada momento elege o melhor atributo dependendo de uma determinada heurística.  
@@ -51,7 +58,13 @@ O ID3 segue os seguintes passos:
 \end{enumerate}
 Mesmo assim deixamos a pensar como é que vamos escolher o nosso melhor atributo?  A resposta esta em dois conceitos: Entropia e Ganho
 \subsection{CART}
-
+CART que significa "Classification and Regression Trees" é um algoritmo caracterizado pela construção de árvores de decisão binárias.\cite{rokach2005top} É um algoritmo que não só constrói árvores de classificação mas sim também árvores de regressão, dependendo se a variável em questão é categórica ou numérica.Como métrica para o ganho utiliza a impuridade de gini.
+O algoritmo segue as seguinte regras para a construção de árvores de decisão:
+\begin{enumerate}
+	\item Os valores das variáveis são escolhidos de forma a que divisão seja a melhor a possível.
+	\item Logo que a divisão se aplique a este processo é aplicado aos seus filhos.
+	\item Esta divisão acaba quando o CART deteta que já não existe nenhum ganho ao fazer a divisão ou no caso da existência de outra regra que ja foi previamente identificada.  
+\end{enumerate}
 
 \subsection{C4.5}
 O algoritmo C4.5 é um melhoramento do algoritmo ID3, isto devido ao fato de trabalhar com valores indisponíveis, com valores contínuos, podar árvores de decisão e derivar regras.
