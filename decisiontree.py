@@ -1,3 +1,6 @@
+# /usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from math import log2
 from sys import maxsize
 from copy import deepcopy
@@ -335,6 +338,11 @@ class Node_root:
     def classify(self, dict):
         user_answer = dict[self.atributo]
         for x in self.answers:
+            if type(x.answer) is Intervalo:
+                if x.answer.inner(user_answer):
+                    return x.classify(dict)
+                continue
+
             if x.answer == user_answer:
                 return x.classify(dict)
 
@@ -391,6 +399,15 @@ class Intervalo:
         """
         self.minimo = minimo
         self.maximo = maximo
+
+    def inner(self, other):
+        if type(other) is not Intervalo:
+            return False
+
+        if self.minimo <= other.minimo and other.maximo <= self.maximo:
+            return True
+        else:
+            return False
 
     def __eq__(self, other):
         if type(self) == type(other):
