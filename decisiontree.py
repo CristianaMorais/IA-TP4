@@ -53,7 +53,10 @@ class DecisionTree:
         :return: str
         '''
         for key, val in self.transformations.items():
-            dict[key] = val[val.index(float(dict[key]))]
+            try:
+                dict[key] = val[val.index(float(dict[key]))]
+            except ValueError:
+                return None
 
         return self.root.classify(dict)
 

@@ -51,16 +51,19 @@ def main():
             firstRow = exemplosBuf.__next__()
 
             for aux in exemplosBuf:
+                if not aux:
+                    break
+
                 dicio = {}  # type: dict(str,str)
                 for i in range(len(firstRow)):
                     dicio[firstRow[i]] = aux[i]
 
                 '''Procurar resposta'''
-                print(arvore.classify(dicio))
-
-                del dicio
-
-            fd.close()
+                resul = arvore.classify(dicio)
+                if resul is None:
+                    print(arvore.mostCommon())
+                else:
+                    print(resul)
 
 
 if __name__ == '__main__':
